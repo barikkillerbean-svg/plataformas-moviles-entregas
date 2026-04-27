@@ -1,62 +1,33 @@
-@media (min-width: 400px) {
-    body {
-        background-color: rgb(40,60,80);
-    }
-}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TP4 - CSS Media Queries</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <article>
+    <h1>Del videojuego a la pantalla grande</h1>
 
-@media (max-width: 800px) {
-    h1 {
-        text-align: center;
-    }
-}
+    <p>
+      Cada vez son más los videojuegos que tienen una adaptación cinematográfica.
+      Se han visto títulos como <a href="#">Sonic</a> o
+      <a href="#">Detective Pikachu</a>.
+    </p>
 
-@media (orientation: landscape) {
-    article {
-        max-width: 50ch;
-    }
-}
+    <p>
+      También se espera una película de <a href="#">Minecraft</a>.
+    </p>
 
-@media (min-height: 200px) {
-    h1 {
-        background-color: #334;
-    }
-}
+    <figure>
+      <img src="https://plataformas-moviles.vercel.app/img/minecraft.jpg" alt="Minecraft">
+      <figcaption>Portada del Minecraft</figcaption>
+    </figure>
 
-@media print {
-    p {
-        font-family: serif;
-    }
-}
-
-@media (prefers-color-scheme: light) {
-    body, h1 {
-        color: #111;
-        background-color: #DDD;
-    }
-}
-
-@media screen and (hover: none) {
-    a {
-        background-color: #212;
-        padding: 2px 5px;
-    }
-}
-
-@media screen and (min-width: 800px) and (max-width: 899px) {
-    img {
-        display: none;
-    }
-}
-
-@media screen and (min-width: 200px) and (max-width: 400px) {
-    img {
-        height: 400px;
-        object-fit: cover;
-    }
-}
-
-@media (min-resolution: 2dppx) {
-    article {
-        background-color: #667;
-    }
-}
+    <p>
+      La película tratará sobre salvar el mundo del Enderdragon.
+    </p>
+  </article>
+</body>
+</html>

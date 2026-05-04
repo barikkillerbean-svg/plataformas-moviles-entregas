@@ -1,1 +1,109 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TP Bootstrap</title>
 
+    <!-- Bootstrap CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-light">
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-dark bg-dark">
+    <div class="container">
+        <span class="navbar-brand">TP Bootstrap</span>
+    </div>
+</nav>
+
+<div class="container mt-4">
+
+    <!-- TÍTULO -->
+    <h1 class="text-center">Control de Versiones con Git</h1>
+
+    <!-- PÁRRAFO -->
+    <p class="fs-5">
+        <strong>Git</strong> es un sistema de control de versiones utilizado para manejar cambios en proyectos.
+    </p>
+
+    <!-- CARD + LISTA -->
+    <div class="card shadow p-3 mb-4">
+        <h2>Comandos más usados</h2>
+
+        <ul class="list-group">
+            <li class="list-group-item"><code>git init</code> - Crear repositorio</li>
+            <li class="list-group-item"><code>git clone</code> - Copiar repositorio</li>
+            <li class="list-group-item"><code>git status</code> - Ver estado</li>
+        </ul>
+    </div>
+
+    <!-- TABLA -->
+    <table class="table table-striped table-primary">
+        <thead>
+            <tr>
+                <th>Comando</th>
+                <th>Función</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>git add</td>
+                <td>Agregar archivos</td>
+            </tr>
+            <tr>
+                <td>git commit</td>
+                <td>Guardar cambios</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- FORMULARIO -->
+    <form class="mt-4">
+        <input type="text" class="form-control mb-2" placeholder="Nombre">
+        <button class="btn btn-success">Enviar</button>
+    </form>
+
+    <!-- ACCORDION -->
+    <div class="accordion mt-4" id="acc">
+        <div class="accordion-item">
+            <h2 class="accordion-header">
+                <button class="accordion-button" data-bs-toggle="collapse" data-bs-target="#info">
+                    ¿Qué es Git?
+                </button>
+            </h2>
+            <div id="info" class="accordion-collapse collapse show">
+                <div class="accordion-body">
+                    Git sirve para controlar versiones del código.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- BOTÓN MODAL -->
+    <button class="btn btn-primary mt-4" data-bs-toggle="modal" data-bs-target="#modal">
+        Abrir Modal
+    </button>
+
+</div>
+
+<!-- MODAL -->
+<div class="modal fade" id="modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Info</h5>
+            </div>
+            <div class="modal-body">
+                Ejemplo de modal con Bootstrap.
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

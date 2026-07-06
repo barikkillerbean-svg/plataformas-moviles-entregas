@@ -5,22 +5,152 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TP7 - Bootstrap Integrador: Ferrari</title>
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
-</head>
-<body class="bg-light text-dark">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&family=Playfair+Display:ital,wght@0,700;1,400&display=swap" rel="stylesheet">
 
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #f8f9fa;
+        }
+        
+        h1, h2, h3, .navbar-brand {
+            font-family: 'Montserrat', sans-serif;
+            letter-spacing: -0.5px;
+        }
+
+        /* Color Oficial Rosso Corsa */
+        .text-ferrari { color: #E30613 !important; }
+        .bg-ferrari { background-color: #E30613 !important; }
+        
+        /* Navbar estilizada */
+        .navbar {
+            border-bottom: 3px solid #E30613;
+            padding: 1rem 0;
+        }
+        .nav-link {
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+            transition: color 0.3s ease;
+        }
+        .nav-link:hover, .nav-link.active {
+            color: #E30613 !important;
+        }
+
+        /* Ajustes del Carrusel */
+        .carousel-item img {
+            height: 60vh;
+            min-height: 400px;
+            object-fit: cover;
+            filter: brightness(0.85);
+        }
+        .carousel-caption {
+            bottom: 10%;
+            max-width: 550px;
+            left: 5%;
+            text-align: left;
+        }
+        .carousel-indicators [data-bs-target] {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: #fff;
+        }
+        .carousel-indicators .active {
+            background-color: #E30613;
+        }
+
+        /* Tarjetas de Modelos */
+        .card-custom {
+            border: none;
+            border-radius: 16px;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            background: #ffffff;
+        }
+        .card-custom:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.12) !important;
+        }
+        .card-custom .card-title {
+            font-size: 1.15rem;
+            margin-bottom: 0.75rem;
+        }
+
+        /* Acordeón FAQ Elegante */
+        .accordion-custom .accordion-item {
+            border: none;
+            margin-bottom: 1rem;
+            border-radius: 12px !important;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+        }
+        .accordion-custom .accordion-button {
+            background-color: #ffffff;
+            color: #212529;
+            font-weight: 600;
+            padding: 1.2rem;
+            border: none;
+        }
+        .accordion-custom .accordion-button:not(.collapsed) {
+            background-color: #fff;
+            color: #E30613;
+            box-shadow: none;
+        }
+        .accordion-custom .accordion-button::after {
+            background-size: 1rem;
+        }
+
+        /* Formulario Moderno */
+        .form-section {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 2.5rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.04);
+        }
+        .form-control {
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+            border: 1px solid #dee2e6;
+            background-color: #fdfdfd;
+        }
+        .form-control:focus {
+            border-color: #E30613;
+            box-shadow: 0 0 0 0.25rem rgba(227, 6, 19, 0.15);
+            background-color: #fff;
+        }
+        .btn-custom-dark {
+            background-color: #111;
+            color: #fff;
+            border: none;
+            font-weight: 600;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        .btn-custom-dark:hover {
+            background-color: #E30613;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm sticky-top">
         <div class="container">
-            <a class="navbar-brand fw-bold text-danger" href="#">
-                <i class="bi bi-speedometer2 me-2"></i>Ferrari
+            <a class="navbar-brand fw-extrabold fs-4 text-ferrari uppercase" href="#">
+                <i class="bi bi-speedometer2 me-2"></i>FERRARI
             </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menuPrincipal" aria-controls="menuPrincipal" aria-expanded="false" aria-label="Toggle navigation">
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#menuPrincipal">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="menuPrincipal">
-                <ul class="navbar-nav ms-auto">
+                <ul class="navbar-nav ms-auto gap-2">
                     <li class="nav-item"><a class="nav-link active" href="#">Inicio</a></li>
                     <li class="nav-item"><a class="nav-link" href="#">Modelos</a></li>
                     <li class="nav-item"><a class="nav-link" href="#">Historia</a></li>
@@ -31,30 +161,30 @@
 
     <div id="carruselFerrari" class="carousel slide shadow-sm mb-5" data-bs-ride="carousel">
         <div class="carousel-indicators">
-            <button type="button" data-bs-target="#carruselFerrari" data-bs-slide-to="0" class="active" aria-current="true"></button>
+            <button type="button" data-bs-target="#carruselFerrari" data-bs-slide-to="0" class="active"></button>
             <button type="button" data-bs-target="#carruselFerrari" data-bs-slide-to="1"></button>
             <button type="button" data-bs-target="#carruselFerrari" data-bs-slide-to="2"></button>
         </div>
         <div class="carousel-inner">
             <div class="carousel-item active" data-bs-interval="4000">
-                <img src="https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?auto=format&fit=crop&w=1200&q=80" class="d-block w-100 img-fluid" alt="Ferrari Frente" style="height: 45vh; min-height: 250px; object-fit: cover;">
-                <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 rounded p-2">
-                    <h5>Ferrari F8 Tributo</h5>
-                    <p class="small mb-0">La máxima evolución de los motores V8 de Maranello.</p>
+                <img src="https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?auto=format&fit=crop&w=1200&q=80" class="d-block w-100" alt="Ferrari Frente">
+                <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-75 rounded-4 p-4 blur-effect">
+                    <h5 class="fw-bold fs-3 text-white m-0">Ferrari F8 Tributo</h5>
+                    <p class="small text-white-50 mt-1 mb-0">La máxima evolución de los motores V8 de Maranello.</p>
                 </div>
             </div>
             <div class="carousel-item" data-bs-interval="4000">
-                <img src="https://images.unsplash.com/photo-1617531653332-bd46c24f2068?auto=format&fit=crop&w=1200&q=80" class="d-block w-100 img-fluid" alt="Ferrari Detalle" style="height: 45vh; min-height: 250px; object-fit: cover;">
-                <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 rounded p-2">
-                    <h5>Scuderia Ferrari Corse</h5>
-                    <p class="small mb-0">Ingeniería italiana nacida directamente en las pistas de Fórmula 1.</p>
+                <img src="https://images.unsplash.com/photo-1617531653332-bd46c24f2068?auto=format&fit=crop&w=1200&q=80" class="d-block w-100" alt="Ferrari Detalle">
+                <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-75 rounded-4 p-4">
+                    <h5 class="fw-bold fs-3 text-white m-0">Scuderia Ferrari Corse</h5>
+                    <p class="small text-white-50 mt-1 mb-0">Ingeniería italiana nacida directamente en las pistas de Fórmula 1.</p>
                 </div>
             </div>
             <div class="carousel-item" data-bs-interval="4000">
-                <img src="https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?auto=format&fit=crop&w=1200&q=80" class="d-block w-100 img-fluid" alt="Ferrari Costado" style="height: 45vh; min-height: 250px; object-fit: cover;">
-                <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 rounded p-2">
-                    <h5>El Legado de Enzo</h5>
-                    <p class="small mb-0">Más de siete décadas construyendo superdeportivos icónicos.</p>
+                <img src="https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?auto=format&fit=crop&w=1200&q=80" class="d-block w-100" alt="Ferrari Costado">
+                <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-75 rounded-4 p-4">
+                    <h5 class="fw-bold fs-3 text-white m-0">El Legado de Enzo</h5>
+                    <p class="small text-white-50 mt-1 mb-0">Más de siete décadas construyendo superdeportivos icónicos.</p>
                 </div>
             </div>
         </div>
@@ -68,106 +198,110 @@
 
     <main class="container mb-5">
 
-        <header class="text-center mb-5 px-2">
-            <h1 class="display-5 fw-bold text-dark">La Pasión del Cavallino Rampante</h1>
-            <p class="lead text-muted fs-6 mt-3 mx-auto" style="max-width: 750px;">
+        <header class="text-center mb-5 pb-2">
+            <h1 class="display-4 fw-extrabold text-dark uppercase mb-3">La Pasión del <span class="text-ferrari">Cavallino Rampante</span></h1>
+            <div class="bg-ferrari mx-auto mb-4" style="width: 60px; height: 4px; border-radius: 2px;"></div>
+            <p class="lead text-secondary fs-5 mx-auto" style="max-width: 780px; line-height: 1.7;">
                 Ferrari no solo fabrica automóviles; forja leyendas sobre ruedas. Fundada por Enzo Ferrari, la marca italiana es el símbolo máximo de rendimiento, aerodinámica y diseño automovilístico a nivel mundial.
             </p>
         </header>
 
         <section class="row g-4 mb-5">
             <div class="col-12 col-md-6 col-lg-3">
-                <div class="card h-100 shadow-sm border-0">
-                    <img src="https://images.unsplash.com/photo-1592853625528-7c24f72f67b7?auto=format&fit=crop&w=500&q=80" class="card-img-top img-fluid" alt="Ferrari Roma" style="height: 160px; object-fit: cover;">
-                    <div class="card-body">
-                        <h5 class="card-title fw-bold">Ferrari Roma</h5>
-                        <p class="card-text text-muted small">Diseño coupé clásico con motor V8 delantero que revive la elegancia italiana tradicional.</p>
+                <div class="card card-custom h-100 shadow-sm">
+                    <img src="https://images.unsplash.com/photo-1592853625528-7c24f72f67b7?auto=format&fit=crop&w=500&q=80" class="card-img-top" alt="Ferrari Roma" style="height: 180px; object-fit: cover;">
+                    <div class="card-body p-4">
+                        <h5 class="card-title fw-bold text-dark">Ferrari Roma</h5>
+                        <p class="card-text text-secondary small lh-base">Diseño coupé clásico con motor V8 delantero que revive la elegancia italiana tradicional.</p>
                     </div>
                 </div>
             </div>
             <div class="col-12 col-md-6 col-lg-3">
-                <div class="card h-100 shadow-sm border-0">
-                    <img src="https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?auto=format&fit=crop&w=500&q=80" class="card-img-top img-fluid" alt="Ferrari Rojo" style="height: 160px; object-fit: cover;">
-                    <div class="card-body">
-                        <h5 class="card-title fw-bold">SF90 Stradale</h5>
-                        <p class="card-text text-muted small">La revolución híbrida enchufable de la marca que alcanza una potencia brutal de 1000 CV.</p>
+                <div class="card card-custom h-100 shadow-sm">
+                    <img src="https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?auto=format&fit=crop&w=500&q=80" class="card-img-top" alt="Ferrari Rojo" style="height: 180px; object-fit: cover;">
+                    <div class="card-body p-4">
+                        <h5 class="card-title fw-bold text-dark">SF90 Stradale</h5>
+                        <p class="card-text text-secondary small lh-base">La revolución híbrida enchufable de la marca que alcanza una potencia brutal de 1000 CV.</p>
                     </div>
                 </div>
             </div>
             <div class="col-12 col-md-6 col-lg-3">
-                <div class="card h-100 shadow-sm border-0">
-                    <img src="https://images.unsplash.com/photo-1583121274602-3e2820c69888?auto=format&fit=crop&w=500&q=80" class="card-img-top img-fluid" alt="Ferrari Motor" style="height: 160px; object-fit: cover;">
-                    <div class="card-body">
-                        <h5 class="card-title fw-bold">Daytona SP3</h5>
-                        <p class="card-text text-muted small">Edición limitada de la serie Icona inspirado en los prototipos deportivos de los años 60.</p>
+                <div class="card card-custom h-100 shadow-sm">
+                    <img src="https://images.unsplash.com/photo-1583121274602-3e2820c69888?auto=format&fit=crop&w=500&q=80" class="card-img-top" alt="Ferrari Motor" style="height: 180px; object-fit: cover;">
+                    <div class="card-body p-4">
+                        <h5 class="card-title fw-bold text-dark">Daytona SP3</h5>
+                        <p class="card-text text-secondary small lh-base">Edición limitada de la serie Icona inspirado en los prototipos deportivos de los años 60.</p>
                     </div>
                 </div>
             </div>
             <div class="col-12 col-md-6 col-lg-3">
-                <div class="card h-100 shadow-sm border-0">
-                    <img src="https://images.unsplash.com/photo-1605558202118-160a02e5340b?auto=format&fit=crop&w=500&q=80" class="card-img-top img-fluid" alt="Ferrari Volante" style="height: 160px; object-fit: cover;">
-                    <div class="card-body">
-                        <h5 class="card-title fw-bold">Purosangue</h5>
-                        <p class="card-text text-muted small">El primer modelo de cuatro puertas y cuatro plazas con motor V12 atmosférico puro.</p>
+                <div class="card card-custom h-100 shadow-sm">
+                    <img src="https://images.unsplash.com/photo-1605558202118-160a02e5340b?auto=format&fit=crop&w=500&q=80" class="card-img-top" alt="Ferrari Volante" style="height: 180px; object-fit: cover;">
+                    <div class="card-body p-4">
+                        <h5 class="card-title fw-bold text-dark">Purosangue</h5>
+                        <p class="card-text text-secondary small lh-base">El primer modelo de cuatro puertas y cuatro plazas con motor V12 atmosférico puro.</p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <hr class="my-5 opacity-25">
+        <div class="py-4"><hr class="opacity-25"></div>
 
         <section class="mb-5 mx-auto" style="max-width: 800px;">
-            <h2 class="text-center fw-bold mb-4">FAQ</h2>
-            <div class="accordion shadow-sm" id="accordionFerrari">
+            <h2 class="text-center fw-bold text-dark mb-4">Preguntas Frecuentes</h2>
+            <div class="accordion accordion-custom" id="accordionFerrari">
                 <div class="accordion-item">
                     <h2 class="accordion-header">
-                        <button class="accordion-button fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#faqOne" aria-expanded="true">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faqOne" aria-expanded="true">
                             ¿Dónde se fabrican los autos Ferrari?
                         </button>
                     </h2>
                     <div id="faqOne" class="accordion-collapse collapse show" data-bs-parent="#accordionFerrari">
-                        <div class="accordion-body text-muted">
-                            Todos los vehículos oficiales de la marca se diseñan, desarrollan y ensamblan íntegramente en la mítica fábrica de <strong>Maranello, Italia</strong>.
+                        <div class="accordion-body text-secondary lh-base">
+                            Todos los vehículos oficiales de la marca se diseñan, desarrollan y ensamblan íntegramente en la mítica fábrica de <strong class="text-dark">Maranello, Italia</strong>.
                         </div>
                     </div>
                 </div>
                 <div class="accordion-item">
                     <h2 class="accordion-header">
-                        <button class="accordion-button collapsed fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#faqTwo">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqTwo">
                             ¿Qué significa el Cavallino Rampante?
                         </button>
                     </h2>
                     <div id="faqTwo" class="accordion-collapse collapse" data-bs-parent="#accordionFerrari">
-                        <div class="accordion-body text-muted">
-                            Es el icónico caballo negro sobre fondo amarillo heredado del aviador de la Primera Guerra Mundial Francesco Baracca.
+                        <div class="accordion-body text-secondary lh-base">
+                            Es el icónico caballo negro sobre fondo amarillo heredado del aviador de la Primera Guerra Mundial Francesco Baracca. Representa valor, audacia y el espíritu indomable de la marca.
                         </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <hr class="my-5 opacity-25">
+        <div class="py-4"><hr class="opacity-25"></div>
 
-        <section class="mx-auto" style="max-width: 600px;">
-            <h2 class="fw-bold mb-3">Dejá tu comentario</h2>
-            <form>
-                <div class="mb-3">
-                    <label for="inputNombre" class="form-label text-secondary small fw-semibold">Nombre</label>
-                    <input type="text" class="form-control" id="inputNombre" placeholder="Tu nombre">
-                </div>
-                <div class="mb-3">
-                    <label for="inputEmail" class="form-label text-secondary small fw-semibold">Email</label>
-                    <input type="email" class="form-control" id="inputEmail" placeholder="tu@email.com">
-                </div>
-                <div class="mb-3">
-                    <label for="txtComentario" class="form-label text-secondary small fw-semibold">Comentario</label>
-                    <textarea class="form-control" id="txtComentario" rows="4" placeholder="Escribí tu comentario..."></textarea>
-                </div>
-                <div class="mt-4">
-                    <button type="button" class="btn btn-secondary me-2 px-4">Cancelar</button>
-                    <button type="submit" class="btn btn-dark px-4">Enviar</button>
-                </div>
-            </form>
+        <section class="mx-auto" style="max-width: 650px;">
+            <div class="form-section">
+                <h2 class="fw-bold text-dark mb-2">Dejá tu comentario</h2>
+                <p class="text-muted small mb-4">Compartí tu opinión o dudas con la comunidad del Cavallino.</p>
+                <form>
+                    <div class="mb-3">
+                        <label for="inputNombre" class="form-label text-dark small fw-semibold">Nombre Completo</label>
+                        <input type="text" class="form-control" id="inputNombre" placeholder="Ej. Juan Pérez">
+                    </div>
+                    <div class="mb-3">
+                        <label for="inputEmail" class="form-label text-dark small fw-semibold">Correo Electrónico</label>
+                        <input type="email" class="form-control" id="inputEmail" placeholder="nombre@correo.com">
+                    </div>
+                    <div class="mb-3">
+                        <label for="txtComentario" class="form-label text-dark small fw-semibold">Tu Comentario</label>
+                        <textarea class="form-control" id="txtComentario" rows="4" placeholder="Escribí lo que pensás..."></textarea>
+                    </div>
+                    <div class="d-flex justify-content-end gap-2 mt-4">
+                        <button type="button" class="btn btn-light px-4 fw-semibold text-secondary">Cancelar</button>
+                        <button type="submit" class="btn btn-custom-dark px-4 py-2">Enviar Mensaje</button>
+                    </div>
+                </form>
+            </div>
         </section>
 
     </main>

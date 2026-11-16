@@ -1,10 +1,7 @@
-
-// Selección de elementos del DOM
 const btnTests = document.getElementById('btn-tests');
 const btnQuotes = document.getElementById('btn-quotes');
 const contenedorResultado = document.getElementById('resultado');
 
-// Diccionario de respaldo para traducir términos comunes si la API responde en inglés o francés
 const traducciones = {
   "anxiety": "Ansiedad",
   "depression": "Depresión",
@@ -18,7 +15,7 @@ const traducciones = {
   "Panic Disorder": "Trastorno de Pánico"
 };
 
-// Función auxiliar para traducir dinámicamente usando la API gratuita de MyMemory
+
 async function traducirAlEspanol(texto, idiomaOrigen = 'en') {
   if (!texto) return '';
   if (traducciones[texto]) return traducciones[texto];
@@ -36,12 +33,11 @@ async function traducirAlEspanol(texto, idiomaOrigen = 'en') {
   return texto;
 }
 
-// Función 1: Obtener lista de tests psicológicos de ansiedad desde la API y traducirlos al español
 async function obtenerTestsPsicologicos() {
   contenedorResultado.innerHTML = '<p class="status">Cargando y traduciendo tests al español...</p>';
   
   try {
-    // Se intenta solicitar primero con parámetro de idioma español (lang=es)
+    
     const respuesta = await fetch('https://psychologieetserenite.com/api/tests?category=anxiety&lang=es');
     
     if (!respuesta.ok) {
@@ -50,8 +46,7 @@ async function obtenerTestsPsicologicos() {
     
     const datos = await respuesta.json();
     console.log('Respuesta JSON original (Tests):', datos);
-    
-    // Extraer el arreglo de resultados
+
     const lista = Array.isArray(datos) ? datos : (datos.tests || datos.data || []);
     
     if (lista.length === 0) {
@@ -61,13 +56,13 @@ async function obtenerTestsPsicologicos() {
 
     const primerosCinco = lista.slice(0, 5);
     
-    // Traducir títulos y descripciones al español en paralelo
+    
     const tarjetasTraducidas = await Promise.all(
       primerosCinco.map(async (item) => {
         const tituloOriginal = item.title || item.name || 'Test de Evaluación';
         const descOriginal = item.description || 'Cuestionario estandarizado de evaluación psicológica.';
         
-        // Detectar si viene en francés (caracteres típicos) o inglés para traducir al español
+        
         const esFrances = /[éèêàùçâîôû]| (de|du|des|le|la|les|pour|avec) /i.test(tituloOriginal);
         const idiomaOrigen = esFrances ? 'fr' : 'en';
 
@@ -94,7 +89,6 @@ async function obtenerTestsPsicologicos() {
   }
 }
 
-// Función 2: Obtener una frase reflexiva/motivacional en JSON y traducirla al español
 async function obtenerFraseMotivacional() {
   contenedorResultado.innerHTML = '<p class="status">Cargando frase en español...</p>';
   

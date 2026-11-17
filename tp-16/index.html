@@ -54,7 +54,6 @@
   <script>
     var contenedor = document.getElementById('resultado');
 
-    // Base de datos JSON interna (100% independiente de límites externos)
     var baseDatosTests = {
       ansiedad: [
         { titulo: "Test GAD-7 (Ansiedad Generalizada)", desc: "Evalúa la frecuencia de síntomas de nerviosismo, miedo y preocupación excesiva en las últimas 2 semanas." },
@@ -99,7 +98,7 @@
             </div>
           `;
         }
-      }, 300); // Pequeña pausa simulando respuesta de red
+      }, 300);
     }
 
     function cargarFrase() {

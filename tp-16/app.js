@@ -1,122 +1,80 @@
-const selectCategoria = document.getElementById('select-categoria');
-const btnTests = document.getElementById('btn-tests');
-const btnQuotes = document.getElementById('btn-quotes');
-const btnLimpiar = document.getElementById('btn-limpiar');
-const contenedorResultado = document.getElementById('resultado');
+var listaPersonajes = [];
+var modalInstancia = null;
 
-async function traducirAlEspanol(texto, idiomaOrigen = 'en') {
-  if (!texto) return '';
-  try {
-    const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(texto)}&langpair=${idiomaOrigen}|es`;
-    const respuesta = await fetch(url);
-    const datos = await respuesta.json();
-    return datos.responseData?.translatedText || texto;
-  } catch (error) {
-    console.warn('No se pudo traducir automáticamente:', error);
-    return texto;
-  }
+function iniciar() {
+    var elementoModal = document.getElementById("modalDetalle");
+    modalInstancia = new bootstrap.Modal(elementoModal);
+    obtenerDatos();
 }
 
-function generarAvatarAutor(nombre) {
-  return `https://api.dicebear.com/8.x/initials/svg?seed=${encodeURIComponent(nombre)}&backgroundColor=b6e3f4,c0aede,d1d4f9&radius=50`;
+function obtenerDatos() {
+    fetch("https://api.disneyapi.dev/character")
+        .then(procesarRespuesta)
+        .then(guardarYMostrar)
+        .catch(manejarError);
 }
 
-async function obtenerTestsPsicologicos() {
-  const categoria = selectCategoria.value;
-  contenedorResultado.innerHTML = '<p class="status">Consultando API de tests psicológicos...</p>';
+function procesarRespuesta(respuesta) {
+    return respuesta.json();
+}
 
-  try {
-    const url = `https://psychologieetserenite.com/api/tests?category=${encodeURIComponent(categoria)}`;
-    const respuesta = await fetch(url);
+function guardarYMostrar(datosJson) {
+    listaPersonajes = datosJson.data;
+    renderizarLista();
+}
 
-    if (!respuesta.ok) {
-      throw new Error(`Error HTTP ${respuesta.status} al consultar los tests.`);
+function manejarError(error) {
+    var contenedor = document.getElementById("contenedor");
+    contenedor.innerHTML = "<div class='alert alert-danger'>Error al conectar con la API.</div>";
+}
+
+function renderizarLista() {
+    var contenedor = document.getElementById("contenedor");
+    var htmlAcumulado = "";
+    var i = 0;
+
+    for (i = 0; i < listaPersonajes.length; i++) {
+        htmlAcumulado += "<div class='card p-3 shadow-sm tarjeta-personaje d-flex align-items-center justify-content-center text-center' onclick='verDetalle(" + i + ")'>";
+        htmlAcumulado += "  <h6 class='m-0'>" + listaPersonajes[i].name + "</h6>";
+        htmlAcumulado += "  <small class='text-primary mt-2'>Ver foto y detalle</small>";
+        htmlAcumulado += "</div>";
     }
 
-    const datos = await respuesta.json();
-    console.log('📦 [JSON TESTS]:', datos);
+    contenedor.innerHTML = htmlAcumulado;
+}
 
-    const lista = Array.isArray(datos) ? datos : (datos.tests || datos.data || []);
+function verDetalle(indice) {
+    var personaje = listaPersonajes[indice];
+    var titulo = document.getElementById("modalTitulo");
+    var imagen = document.getElementById("modalImagen");
+    var info = document.getElementById("modalInfo");
+    var textoPeliculas = "Ninguna";
+    var textoSeries = "Ninguna";
 
-    if (lista.length === 0) {
-      contenedorResultado.innerHTML = '<p class="status">No se encontraron tests para esta categoría.</p>';
-      return;
+    titulo.innerText = personaje.name;
+    
+    // Carga diferida: recién aquí el navegador descarga la imagen al hacer clic
+    imagen.src = ""; 
+    if (personaje.imageUrl) {
+        imagen.src = personaje.imageUrl;
+        imagen.style.display = "inline-block";
+    } else {
+        imagen.style.display = "none";
     }
 
-    const primerosCinco = lista.slice(0, 5);
-    contenedorResultado.innerHTML = '<p class="status">Traduciendo resultados al español...</p>';
-
-    const tarjetasTraducidas = await Promise.all(
-      primerosCinco.map(async (item) => {
-        const tituloOriginal = item.title || item.name || 'Test de Evaluación';
-        const descOriginal = item.description || 'Cuestionario estandarizado de evaluación psicológica.';
-        const idioma = /[éèêàùç]/.test(tituloOriginal) ? 'fr' : 'en';
-
-        const tituloEs = await traducirAlEspanol(tituloOriginal, idioma);
-        const descEs = await traducirAlEspanol(descOriginal, idioma);
-
-        return { titulo: tituloEs, descripcion: descEs };
-      })
-    );
-
-    contenedorResultado.innerHTML = '';
-    tarjetasTraducidas.forEach((item) => {
-      const card = document.createElement('div');
-      card.className = 'card';
-      card.innerHTML = `
-        <div class="card-text">
-          <h3>${item.titulo}</h3>
-          <p>${item.descripcion}</p>
-        </div>
-      `;
-      contenedorResultado.appendChild(card);
-    });
-
-  } catch (error) {
-    console.error('❌ Error en Tests:', error);
-    contenedorResultado.innerHTML = `<p class="error">Ocurrió un error: ${error.message}</p>`;
-  }
-}
-
-async function obtenerFraseMotivacional() {
-  contenedorResultado.innerHTML = '<p class="status">Obteniendo frase y generando avatar...</p>';
-
-  try {
-    const respuesta = await fetch('https://dummyjson.com/quotes/random');
-
-    if (!respuesta.ok) {
-      throw new Error(`Error HTTP ${respuesta.status} al obtener la frase.`);
+    if (personaje.films && personaje.films.length > 0) {
+        textoPeliculas = personaje.films.join(", ");
     }
 
-    const dato = await respuesta.json();
-    console.log('📦 [JSON FRASE]:', dato);
+    if (personaje.tvShows && personaje.tvShows.length > 0) {
+        textoSeries = personaje.tvShows.join(", ");
+    }
 
-    const fraseEs = await traducirAlEspanol(dato.quote, 'en');
-    const avatarUrl = generarAvatarAutor(dato.author);
+    info.innerHTML = "<p><strong>ID:</strong> " + personaje._id + "</p>" +
+                     "<p><strong>Películas:</strong> " + textoPeliculas + "</p>" +
+                     "<p><strong>Series de TV:</strong> " + textoSeries + "</p>";
 
-    contenedorResultado.innerHTML = `
-      <div class="card">
-        <div class="card-image">
-          <img src="${avatarUrl}" alt="Avatar de ${dato.author}" onerror="this.style.display='none'">
-        </div>
-        <div class="card-text">
-          <h3>"${fraseEs}"</h3>
-          <p>— ${dato.author}</p>
-        </div>
-      </div>
-    `;
-
-  } catch (error) {
-    console.error('❌ Error en Frase:', error);
-    contenedorResultado.innerHTML = `<p class="error">Ocurrió un error: ${error.message}</p>`;
-  }
+    modalInstancia.show();
 }
 
-function limpiarResultados() {
-  contenedorResultado.innerHTML = '<p class="status">Pantalla limpia. Selecciona una opción para consultar nuevamente.</p>';
-  console.clear();
-}
-
-btnTests.addEventListener('click', obtenerTestsPsicologicos);
-btnQuotes.addEventListener('click', obtenerFraseMotivacional);
-btnLimpiar.addEventListener('click', limpiarResultados);
+window.onload = iniciar;

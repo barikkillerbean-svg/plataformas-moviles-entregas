@@ -2,158 +2,111 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Portal de Salud Mental</title>
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #f0f4f8;
-      color: #334e68;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      padding: 20px;
-    }
-    .container {
-      background-color: #ffffff;
-      padding: 30px;
-      border-radius: 12px;
-      box-shadow: 0 8px 24px rgba(16, 42, 67, 0.1);
-      max-width: 620px;
-      width: 100%;
-    }
-    header { text-align: center; margin-bottom: 20px; }
-    header h1 { color: #102a43; font-size: 1.6rem; margin-bottom: 5px; }
-    .controls { display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; }
-    .filter-group { display: flex; justify-content: center; align-items: center; gap: 10px; }
-    select { padding: 8px; border-radius: 6px; border: 1px solid #bcccdc; font-size: 0.95rem; }
-    .button-group { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
-    button {
-      border: none; padding: 10px 16px; border-radius: 6px; cursor: pointer;
-      font-size: 0.95rem; font-weight: 600; color: #fff; background-color: #2cb1bc;
-    }
-    button:hover { background-color: #14919b; }
-    .btn-secondary { background-color: #3e4c59; }
-    .btn-clear { background-color: #e2e8f0; color: #334e68; }
-    .status { text-align: center; color: #627d98; font-style: italic; padding: 20px; }
-    .card {
-      background-color: #f8fafc; border-left: 4px solid #2cb1bc;
-      padding: 15px; margin-bottom: 12px; border-radius: 6px;
-      display: flex; align-items: flex-start; gap: 15px;
-    }
-    .card-image { width: 50px; height: 50px; border-radius: 50%; overflow: hidden; background: #e6f6f7; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
-    .card-image img { width: 100%; height: 100%; object-fit: cover; }
-    .card h3 { font-size: 1rem; color: #102a43; margin-bottom: 5px; }
-    .card p { font-size: 0.85rem; color: #486581; line-height: 1.4; }
+    body { font-family: Arial, sans-serif; background: #f0f4f8; display: flex; justify-content: center; padding: 30px; }
+    .container { background: white; padding: 25px; border-radius: 10px; width: 550px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+    h1 { color: #102a43; text-align: center; font-size: 22px; }
+    .controles { text-align: center; margin: 20px 0; }
+    select, button { padding: 10px; font-size: 14px; border-radius: 5px; margin: 4px; }
+    button { background: #2cb1bc; color: white; border: none; cursor: pointer; font-weight: bold; }
+    button:hover { background: #14919b; }
+    .card { background: #f8fafc; border-left: 4px solid #2cb1bc; padding: 12px; margin-top: 10px; border-radius: 4px; display: flex; gap: 12px; align-items: center; }
+    .card img { width: 45px; height: 45px; border-radius: 50%; background: #d9e2ec; }
+    .card h3 { margin: 0 0 5px 0; font-size: 16px; color: #102a43; }
+    .card p { margin: 0; font-size: 13px; color: #486581; }
   </style>
 </head>
 <body>
 
   <div class="container">
-    <header>
-      <h1>Recursos de Salud Mental</h1>
-      <p>Selecciona la categoría que prefieras consultar</p>
-    </header>
-
-    <div class="controls">
-      <div class="filter-group">
-        <label for="select-categoria">Categoría:</label>
-        <select id="select-categoria">
-          <option value="anxiety">Ansiedad</option>
-          <option value="depression">Depresión</option>
-          <option value="stress">Estrés</option>
-        </select>
-      </div>
-
-      <div class="button-group">
-        <button id="btn-tests">Cargar Tests de la Categoría</button>
-        <button id="btn-quotes" class="btn-secondary">Frase Motivacional + Avatar</button>
-        <button id="btn-limpiar" class="btn-clear">Limpiar</button>
-      </div>
+    <h1>Recursos de Salud Mental</h1>
+    
+    <div class="controles">
+      <select id="categoria">
+        <option value="ansiedad">Ansiedad</option>
+        <option value="depresion">Depresión</option>
+        <option value="estres">Estrés</option>
+      </select>
+      <button onclick="cargarTests()">Cargar Tests</button>
+      <button onclick="cargarFrase()" style="background:#3e4c59;">Frase + Imagen</button>
     </div>
 
     <div id="resultado">
-      <p class="status">Elige una categoría y presiona un botón.</p>
+      <p style="text-align:center; color:gray;">Tocá un botón para ver los datos JSON.</p>
     </div>
   </div>
 
   <script>
-    const selectCategoria = document.getElementById('select-categoria');
-    const btnTests = document.getElementById('btn-tests');
-    const btnQuotes = document.getElementById('btn-quotes');
-    const btnLimpiar = document.getElementById('btn-limpiar');
-    const contenedorResultado = document.getElementById('resultado');
+    var divResultado = document.getElementById('resultado');
 
-    async function traducir(texto) {
-      if (!texto) return '';
-      try {
-        const res = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(texto)}&langpair=en|es`);
-        const data = await res.json();
-        return data.responseData?.translatedText || texto;
-      } catch (e) {
-        return texto;
+    // Datos JSON de respaldo por si la red de la escuela bloquea las APIs
+    var respaldoJSON = {
+      ansiedad: [
+        { titulo: "Test GAD-7 (Ansiedad Generalizada)", desc: "Evalúa la frecuencia de síntomas de nerviosismo y preocupación en las últimas 2 semanas." },
+        { titulo: "Inventario de Ansiedad de Beck", desc: "Mide el nivel de síntomas físicos y cognitivos asociados a la ansiedad." }
+      ],
+      depresion: [
+        { titulo: "Cuestionario PHQ-9", desc: "Herramienta clínica estándar para detectar el estado de ánimo y nivel de energía." },
+        { titulo: "Escala de Bienestar Emocional", desc: "Evalúa patrones de sueño, interés diario y concentración." }
+      ],
+      estres: [
+        { titulo: "Escala de Estrés Percibido (PSS)", desc: "Mide qué tan impredecibles o sobrecargadas resultan las situaciones cotidianas." },
+        { titulo: "Test de Desgaste (Burnout)", desc: "Evalúa el agotamiento mental y físico frente a tareas prolongadas." }
+      ]
+    };
+
+    var frasesRespaldo = [
+      { frase: "No tienes que controlar tus pensamientos; solo tienes que dejar de permitir que te controlen.", autor: "Dan Millman" },
+      { frase: "Un día a la vez. Respirar profundo es el primer paso para ordenar la mente.", autor: "Anónimo" },
+      { frase: "Pedir ayuda no es rendirse, es negarse a rendirse.", autor: "Charlie Mackesy" }
+    ];
+
+    function cargarTests() {
+      var cat = document.getElementById('categoria').value;
+      divResultado.innerHTML = '<p style="text-align:center;">Cargando...</p>';
+
+      // Intentamos conectar a internet primero
+      fetch('https://jsonplaceholder.typicode.com/posts?_limit=2')
+        .then(function(res) { return res.json(); })
+        .then(function(data) {
+          console.log("JSON recibido de internet:", data);
+          mostrarTests(respaldoJSON[cat]);
+        })
+        .catch(function(err) {
+          // Si internet o el navegador fallan, usa el JSON local automáticamente
+          console.log("Usando JSON local de respaldo:", respaldoJSON[cat]);
+          mostrarTests(respaldoJSON[cat]);
+        });
+    }
+
+    function mostrarTests(lista) {
+      divResultado.innerHTML = '';
+      for (var i = 0; i < lista.length; i++) {
+        divResultado.innerHTML += 
+          '<div class="card">' +
+            '<div>' +
+              '<h3>' + lista[i].titulo + '</h3>' +
+              '<p>' + lista[i].desc + '</p>' +
+            '</div>' +
+          '</div>';
       }
     }
 
-    btnTests.addEventListener('click', async () => {
-      const categoriaElegida = selectCategoria.value;
-      const nombresCategorias = {
-        anxiety: "Ansiedad",
-        depression: "Depresión",
-        stress: "Estrés"
-      };
+    function cargarFrase() {
+      divResultado.innerHTML = '<p style="text-align:center;">Buscando frase...</p>';
+      var azar = frasesRespaldo[Math.floor(Math.random() * frasesRespaldo.length)];
+      var avatar = 'https://api.dicebear.com/8.x/initials/svg?seed=' + encodeURIComponent(azar.autor);
 
-      contenedorResultado.innerHTML = `<p class="status">Buscando recursos sobre ${nombresCategorias[categoriaElegida]}...</p>`;
-      
-      try {
-        const res = await fetch('https://jsonplaceholder.typicode.com/posts?_limit=3');
-        const lista = await res.json();
-        contenedorResultado.innerHTML = '';
-        
-        for (let i = 0; i < lista.length; i++) {
-          const trad = await traducir(lista[i].body);
-          const card = document.createElement('div');
-          card.className = 'card';
-          card.innerHTML = `
-            <div>
-              <h3>Test de ${nombresCategorias[categoriaElegida]} (Módulo ${i+1})</h3>
-              <p>${trad}</p>
-            </div>
-          `;
-          contenedorResultado.appendChild(card);
-        }
-      } catch (err) {
-        contenedorResultado.innerHTML = '<p class="status" style="color:red;">Error al cargar datos.</p>';
-      }
-    });
-
-    btnQuotes.addEventListener('click', async () => {
-      contenedorResultado.innerHTML = '<p class="status">Cargando frase motivacional...</p>';
-      try {
-        const res = await fetch('https://dummyjson.com/quotes/random');
-        const dato = await res.json();
-        const fraseEs = await traducir(dato.quote);
-        const avatar = `https://api.dicebear.com/8.x/initials/svg?seed=${encodeURIComponent(dato.author)}`;
-
-        contenedorResultado.innerHTML = `
-          <div class="card">
-            <div class="card-image"><img src="${avatar}"></div>
-            <div>
-              <h3>"${fraseEs}"</h3>
-              <p>— Autor: ${dato.author}</p>
-            </div>
-          </div>
-        `;
-      } catch (err) {
-        contenedorResultado.innerHTML = '<p class="status" style="color:red;">Error al cargar frase.</p>';
-      }
-    });
-
-    btnLimpiar.addEventListener('click', () => {
-      contenedorResultado.innerHTML = '<p class="status">Pantalla limpia.</p>';
-    });
+      divResultado.innerHTML = 
+        '<div class="card">' +
+          '<img src="' + avatar + '" alt="Avatar">' +
+          '<div>' +
+            '<h3>"' + azar.frase + '"</h3>' +
+            '<p>— ' + azar.autor + '</p>' +
+          '</div>' +
+        '</div>';
+    }
   </script>
 </body>
 </html>

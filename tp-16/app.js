@@ -1,15 +1,9 @@
-// ==========================================
-// 1. SELECCIÓN DE ELEMENTOS DEL DOM
-// ==========================================
 const selectCategoria = document.getElementById('select-categoria');
 const btnTests = document.getElementById('btn-tests');
 const btnQuotes = document.getElementById('btn-quotes');
 const btnLimpiar = document.getElementById('btn-limpiar');
 const contenedorResultado = document.getElementById('resultado');
 
-// ==========================================
-// 2. FUNCIONES AUXILIARES (Traducción y Avatar)
-// ==========================================
 async function traducirAlEspanol(texto, idiomaOrigen = 'en') {
   if (!texto) return '';
   try {
@@ -27,9 +21,6 @@ function generarAvatarAutor(nombre) {
   return `https://api.dicebear.com/8.x/initials/svg?seed=${encodeURIComponent(nombre)}&backgroundColor=b6e3f4,c0aede,d1d4f9&radius=50`;
 }
 
-// ==========================================
-// 3. CONSUMO DE API 1: TESTS PSICOLÓGICOS
-// ==========================================
 async function obtenerTestsPsicologicos() {
   const categoria = selectCategoria.value;
   contenedorResultado.innerHTML = '<p class="status">Consultando API de tests psicológicos...</p>';
@@ -87,9 +78,6 @@ async function obtenerTestsPsicologicos() {
   }
 }
 
-// ==========================================
-// 4. CONSUMO DE API 2: FRASE + AVATAR
-// ==========================================
 async function obtenerFraseMotivacional() {
   contenedorResultado.innerHTML = '<p class="status">Obteniendo frase y generando avatar...</p>';
 
@@ -124,9 +112,6 @@ async function obtenerFraseMotivacional() {
   }
 }
 
-// ==========================================
-// 5. LIMPIAR PANTALLA Y EVENTOS
-// ==========================================
 function limpiarResultados() {
   contenedorResultado.innerHTML = '<p class="status">Pantalla limpia. Selecciona una opción para consultar nuevamente.</p>';
   console.clear();

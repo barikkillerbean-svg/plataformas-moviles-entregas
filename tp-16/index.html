@@ -4,108 +4,125 @@
   <meta charset="UTF-8">
   <title>Portal de Salud Mental</title>
   <style>
-    body { font-family: Arial, sans-serif; background: #f0f4f8; display: flex; justify-content: center; padding: 30px; }
-    .container { background: white; padding: 25px; border-radius: 10px; width: 550px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-    h1 { color: #102a43; text-align: center; font-size: 22px; }
-    .controles { text-align: center; margin: 20px 0; }
-    select, button { padding: 10px; font-size: 14px; border-radius: 5px; margin: 4px; }
-    button { background: #2cb1bc; color: white; border: none; cursor: pointer; font-weight: bold; }
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f0f4f8; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; }
+    .container { background: white; padding: 30px; border-radius: 12px; width: 550px; box-shadow: 0 8px 24px rgba(0,0,0,0.08); }
+    h1 { color: #102a43; text-align: center; font-size: 1.5rem; margin-bottom: 5px; }
+    p.sub { text-align: center; color: #627d98; font-size: 0.9rem; margin-bottom: 20px; }
+    .controles { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+    .fila { display: flex; justify-content: center; gap: 10px; }
+    select, button { padding: 10px 15px; font-size: 0.95rem; border-radius: 6px; border: 1px solid #bcccdc; font-weight: 600; cursor: pointer; }
+    select { background: #f8fafc; color: #102a43; }
+    button { background: #2cb1bc; color: white; border: none; transition: background 0.2s; }
     button:hover { background: #14919b; }
-    .card { background: #f8fafc; border-left: 4px solid #2cb1bc; padding: 12px; margin-top: 10px; border-radius: 4px; display: flex; gap: 12px; align-items: center; }
-    .card img { width: 45px; height: 45px; border-radius: 50%; background: #d9e2ec; }
-    .card h3 { margin: 0 0 5px 0; font-size: 16px; color: #102a43; }
-    .card p { margin: 0; font-size: 13px; color: #486581; }
+    .btn-frase { background: #3e4c59; }
+    .btn-frase:hover { background: #1f2933; }
+    .btn-limpiar { background: #e2e8f0; color: #334e68; }
+    .btn-limpiar:hover { background: #cbd5e1; }
+    .card { background: #f8fafc; border-left: 4px solid #2cb1bc; padding: 15px; margin-top: 12px; border-radius: 6px; display: flex; gap: 15px; align-items: flex-start; }
+    .card img { width: 50px; height: 50px; border-radius: 50%; background: #e6f6f7; flex-shrink: 0; object-fit: cover; }
+    .card h3 { margin: 0 0 5px 0; font-size: 1.05rem; color: #102a43; }
+    .card p { margin: 0; font-size: 0.9rem; color: #486581; line-height: 1.4; }
+    .status { text-align: center; color: #627d98; font-style: italic; padding: 15px; }
   </style>
 </head>
 <body>
 
   <div class="container">
     <h1>Recursos de Salud Mental</h1>
+    <p class="sub">Sistema interactivo de consultas JSON</p>
     
     <div class="controles">
-      <select id="categoria">
-        <option value="ansiedad">Ansiedad</option>
-        <option value="depresion">Depresión</option>
-        <option value="estres">Estrés</option>
-      </select>
-      <button onclick="cargarTests()">Cargar Tests</button>
-      <button onclick="cargarFrase()" style="background:#3e4c59;">Frase + Imagen</button>
+      <div class="fila">
+        <select id="categoria">
+          <option value="ansiedad">Ansiedad</option>
+          <option value="depresion">Depresión</option>
+          <option value="estres">Estrés</option>
+        </select>
+      </div>
+      <div class="fila">
+        <button onclick="cargarTests()">Cargar Tests</button>
+        <button class="btn-frase" onclick="cargarFrase()">Frase + Avatar</button>
+        <button class="btn-limpiar" onclick="limpiar()">Limpiar</button>
+      </div>
     </div>
 
     <div id="resultado">
-      <p style="text-align:center; color:gray;">Tocá un botón para ver los datos JSON.</p>
+      <p class="status">Selecciona una categoría y presiona un botón para ver el JSON.</p>
     </div>
   </div>
 
   <script>
-    var divResultado = document.getElementById('resultado');
+    var contenedor = document.getElementById('resultado');
 
-    // Datos JSON de respaldo por si la red de la escuela bloquea las APIs
-    var respaldoJSON = {
+    // Base de datos JSON interna (100% independiente de límites externos)
+    var baseDatosTests = {
       ansiedad: [
-        { titulo: "Test GAD-7 (Ansiedad Generalizada)", desc: "Evalúa la frecuencia de síntomas de nerviosismo y preocupación en las últimas 2 semanas." },
-        { titulo: "Inventario de Ansiedad de Beck", desc: "Mide el nivel de síntomas físicos y cognitivos asociados a la ansiedad." }
+        { titulo: "Test GAD-7 (Ansiedad Generalizada)", desc: "Evalúa la frecuencia de síntomas de nerviosismo, miedo y preocupación excesiva en las últimas 2 semanas." },
+        { titulo: "Inventario de Ansiedad de Beck", desc: "Mide la gravedad de los síntomas físicos y cognitivos asociados a trastornos de pánico y ansiedad." },
+        { titulo: "Escala de Ansiedad Social", desc: "Analiza el nivel de incomodidad y miedo al juicio en interacciones y situaciones sociales cotidianas." }
       ],
       depresion: [
-        { titulo: "Cuestionario PHQ-9", desc: "Herramienta clínica estándar para detectar el estado de ánimo y nivel de energía." },
-        { titulo: "Escala de Bienestar Emocional", desc: "Evalúa patrones de sueño, interés diario y concentración." }
+        { titulo: "Cuestionario PHQ-9 (Depresión)", desc: "Herramienta de tamizaje clínico que evalúa el estado de ánimo, interés y niveles de energía." },
+        { titulo: "Escala de Bienestar Emocional", desc: "Examina los patrones recientes de sueño, concentración y motivación personal." },
+        { titulo: "Inventario de Autoestima y Apoyo", desc: "Mide la autopercepción emocional y la red de contención disponible frente al desánimo." }
       ],
       estres: [
-        { titulo: "Escala de Estrés Percibido (PSS)", desc: "Mide qué tan impredecibles o sobrecargadas resultan las situaciones cotidianas." },
-        { titulo: "Test de Desgaste (Burnout)", desc: "Evalúa el agotamiento mental y físico frente a tareas prolongadas." }
+        { titulo: "Escala de Estrés Percibido (PSS)", desc: "Mide el grado en que las situaciones de la vida diaria son valoradas como estables o sobrecargadas." },
+        { titulo: "Test de Desgaste Ocupacional (Burnout)", desc: "Evalúa el agotamiento mental, físico y emocional frente a tareas prolongadas o estudios." },
+        { titulo: "Cuestionario de Carga Mental", desc: "Analiza el impacto del ritmo cotidiano en la capacidad de relajación y descanso." }
       ]
     };
 
-    var frasesRespaldo = [
+    var listaFrases = [
       { frase: "No tienes que controlar tus pensamientos; solo tienes que dejar de permitir que te controlen.", autor: "Dan Millman" },
       { frase: "Un día a la vez. Respirar profundo es el primer paso para ordenar la mente.", autor: "Anónimo" },
-      { frase: "Pedir ayuda no es rendirse, es negarse a rendirse.", autor: "Charlie Mackesy" }
+      { frase: "Pedir ayuda no es rendirse, es negarse a rendirse.", autor: "Charlie Mackesy" },
+      { frase: "Lo que se niega somatiza; lo que se acepta, se transforma.", autor: "Carl Jung" },
+      { frase: "Cuidar de tu mente es un acto de valentía, no de debilidad.", autor: "Desconocido" }
     ];
 
     function cargarTests() {
       var cat = document.getElementById('categoria').value;
-      divResultado.innerHTML = '<p style="text-align:center;">Cargando...</p>';
+      contenedor.innerHTML = '<p class="status">Procesando estructura JSON...</p>';
 
-      // Intentamos conectar a internet primero
-      fetch('https://jsonplaceholder.typicode.com/posts?_limit=2')
-        .then(function(res) { return res.json(); })
-        .then(function(data) {
-          console.log("JSON recibido de internet:", data);
-          mostrarTests(respaldoJSON[cat]);
-        })
-        .catch(function(err) {
-          // Si internet o el navegador fallan, usa el JSON local automáticamente
-          console.log("Usando JSON local de respaldo:", respaldoJSON[cat]);
-          mostrarTests(respaldoJSON[cat]);
-        });
-    }
-
-    function mostrarTests(lista) {
-      divResultado.innerHTML = '';
-      for (var i = 0; i < lista.length; i++) {
-        divResultado.innerHTML += 
-          '<div class="card">' +
-            '<div>' +
-              '<h3>' + lista[i].titulo + '</h3>' +
-              '<p>' + lista[i].desc + '</p>' +
-            '</div>' +
-          '</div>';
-      }
+      setTimeout(function() {
+        var items = baseDatosTests[cat];
+        contenedor.innerHTML = '';
+        
+        for (var i = 0; i < items.length; i++) {
+          contenedor.innerHTML += `
+            <div class="card">
+              <div>
+                <h3>${items[i].titulo}</h3>
+                <p>${items[i].desc}</p>
+              </div>
+            </div>
+          `;
+        }
+      }, 300); // Pequeña pausa simulando respuesta de red
     }
 
     function cargarFrase() {
-      divResultado.innerHTML = '<p style="text-align:center;">Buscando frase...</p>';
-      var azar = frasesRespaldo[Math.floor(Math.random() * frasesRespaldo.length)];
-      var avatar = 'https://api.dicebear.com/8.x/initials/svg?seed=' + encodeURIComponent(azar.autor);
+      contenedor.innerHTML = '<p class="status">Generando avatar e imprimiendo JSON...</p>';
 
-      divResultado.innerHTML = 
-        '<div class="card">' +
-          '<img src="' + avatar + '" alt="Avatar">' +
-          '<div>' +
-            '<h3>"' + azar.frase + '"</h3>' +
-            '<p>— ' + azar.autor + '</p>' +
-          '</div>' +
-        '</div>';
+      setTimeout(function() {
+        var azar = listaFrases[Math.floor(Math.random() * listaFrases.length)];
+        var avatarUrl = `https://api.dicebear.com/8.x/initials/svg?seed=${encodeURIComponent(azar.autor)}&backgroundColor=b6e3f4,c0aede,d1d4f9&radius=50`;
+
+        contenedor.innerHTML = `
+          <div class="card">
+            <img src="${avatarUrl}" alt="Avatar">
+            <div>
+              <h3>"${azar.frase}"</h3>
+              <p>— ${azar.autor}</p>
+            </div>
+          </div>
+        `;
+      }, 300);
+    }
+
+    function limpiar() {
+      contenedor.innerHTML = '<p class="status">Pantalla limpia. Listo para la demostración.</p>';
     }
   </script>
 </body>
